@@ -42,7 +42,7 @@ classdef Regression < handle
     properties 
         Input;  %input struct
         % the input struct must be composed in this way:
-        % obj.Input.inputdates = params.inputdates;
+        % obj.Input.inputdates = params.inputdates; 
         %       an array of dates in matlab numbers
         % obj.Input.inputarray = params.inputarray;
         %       a matrix containig the dependent variable in first colunm
@@ -51,13 +51,11 @@ classdef Regression < handle
         %       a cell array with the names of the X and Ys
         % obj.Input.rollingperiod = params.rollingperiod;
         %       a single number indicating the rolling window leingh in
-        %       terms of number of period (eg if the number is set as 60,
-        %       could be 60 days in case the series are daily or 60
-        %       weeks if the series are weekly
+        %       terms of number of period (eg if the 
         TableRet; %table table to be used as input for fitlm(table) regressors + dependent variable in last column
         MtxOfRegressors = []; %the logical matrix that specify wich regressors are effectively used in the regression
         RegResult; % the result of the regression. It's a LinearModel object
-        RegTests; %TO BE BETTER DEFINED include the result of different test of the regression quality
+        RegTests; %TO BE WELL DEFINED include the result of different test of the regression quality
         Betas; % array with: 1st clmn dates, 2nd clmn intercept, then betas 
         RollingPeriod; % rolling window's number of periods (in case the rolling period is not needed put any number)
         Output; %generic output for the GETs methods
