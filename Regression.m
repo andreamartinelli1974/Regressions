@@ -153,7 +153,7 @@ classdef Regression < handle
     methods (Static)
         
         %% this function Create a logical mtx to choose some regressors using different criteria
-        function matrix=getMtxPredictors(obj,numberOfTry,method)
+        function matrix=getMtxPredictors(obj,numberOfTry,method,varargin)
             
             % ******************************************************
             %
@@ -161,72 +161,75 @@ classdef Regression < handle
             THRESHOLD = 0.75;
             %
             % ******************************************************
-            
-            if strcmp(method,'strategy')
-% % % TO IMPLEMENT THIS PART OF THE METHOD WITHOUT THE INDEX CLASS                
-% %                 % in this case the matrix group the index of the same asset
-% %                 % class (e.g. all the equity indexes, credit indexes etc)
-% %                 assetclass=cell(2,size(obj.Regressors,2));
-% %                 for i = 1:size(obj.Regressors,2)
-% %                     obj.Regressors(i).GetName;
-% %                     assetclass(1,i) = cellstr(obj.Regressors(i).Output);
-% %                     obj.Regressors(i).GetAssetClass;
-% %                     assetclass(2,i) = cellstr(obj.Regressors(i).Output);
-% %                 end
-% %                 step=1;
-% %                 mtxstep=1;
-% %                 matrix=zeros(1,size(obj.Regressors,2));
-% %                 test=assetclass(2,step);
-% %                 matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
-% %                 step=step+1;
-% %                 mtxstep=mtxstep+1;
-% %                 while step<=size(obj.Regressors,2)
-% %                     test=assetclass(2,step);
-% %                     if sum(strcmp(test,assetclass(2,1:step-1)))==0
-% %                         matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
-% %                         mtxstep=mtxstep+1;
-% %                     end
-% %                     while step<=size(obj.Regressors,2) & strcmp(test,assetclass(2,step))
-% %                         step=step+1;
-% %                     end
-% %               end
-                
-            elseif strcmp(method,'random')
-                % in this case the mtx is random 
-                % any row conmtains a random vector of 1 and 0
-                % no constraints on the numeber of 1s
-                % the matrix has numberOfTry rows
-                matrix=round(rand(numberOfTry,size(obj.TableRet,2)-2));
-                
-            elseif strcmp(method,'correlation')        
-                % this finction select a subset of regressors with
-                % correlation < gate (first try gate=0.75) step by step
-                % (any row has a regressor deleted
-                
-                indexcorr=corrcoef(table2array(obj.TableRet(:,2:end-1)));
-                gate=abs(indexcorr)> THRESHOLD;
-                gateswitch=sum(gate,1);
-                [A,I]=sort(gateswitch,'descend');
-                H=ones(size(I,2),size(I,2));
-                counter=0;
-                riga=2;
-                while A(1,1)>1
-                    H(riga:end,I(1,1))=0;
-                    gate(I(1,1),:)=0;
-                    gate(:,I(1,1))=0;
-                    gateswitch=sum(gate,1);
-                    riga=riga+1;
-                    [A,I]=sort(gateswitch,'descend');
-                    if counter>size(obj.TableRet,2)*5
-                        break
+            switch method
+                case 'strategy'
+                    if nargin<=3
+                        ME=MException('myComponent:dateError','manca array con le strategie dei regressori',obj.HFund.Name);
+                        throw(ME)
                     end
-                end
-                H(riga:end,:)=[];
-                matrix=H;
-            else
-                % to be implemented
+               
+                % in this case the matrix group the index of the same asset
+                % class (e.g. all the equity indexes, credit indexes etc)
+                assetclass=varargin{1,1};
+                step=1;
+                mtxstep=1;
+                matrix=zeros(1,size(assetclass,2));
+                test=assetclass(2,step);
+                matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
+                step=step+1;
+                mtxstep=mtxstep+1;
+                while step<=size(assetclass,2)
+                    test=assetclass(2,step);
+                    if sum(strcmp(test,assetclass(2,1:step-1)))==0
+                        matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
+                        mtxstep=mtxstep+1;
+                    end
+                    while step<=size(assetclass,2) & strcmp(test,assetclass(2,step))
+                        step=step+1;
+                    end
+              end
                 
-                matrix=ones(1,size(obj.TableRet,2)-2); %this may be deleted
+                case 'random'
+                    % in this case the mtx is random 
+                    % any row conmtains a random vector of 1 and 0
+                    % no constraints on the numeber of 1s
+                    % the matrix has numberOfTry rows
+                    matrix=round(rand(numberOfTry,size(obj.TableRet,2)-2));
+                
+                case 'correlation'        
+                    % this finction select a subset of regressors with
+                    % correlation < gate (first try gate=0.75) step by step
+                    % (any row has a regressor deleted
+                    
+                    indexcorr=corrcoef(table2array(obj.TableRet(:,2:end-1)));
+                    gate=abs(indexcorr)> THRESHOLD;
+                    gateswitch=sum(gate,1);
+                    [A,I]=sort(gateswitch,'descend');
+                    H=ones(size(I,2),size(I,2));
+                    counter=0;
+                    riga=2;
+                    while A(1,1)>1
+                        H(riga:end,I(1,1))=0;
+                        gate(I(1,1),:)=0;
+                        gate(:,I(1,1))=0;
+                        gateswitch=sum(gate,1);
+                        riga=riga+1;
+                        [A,I]=sort(gateswitch,'descend');
+                        if counter>size(obj.TableRet,2)*5
+                            break
+                        end
+                    end
+                    H(riga:end,:)=[];
+                    matrix=H;
+                otherwise
+                % to be implemented
+                    disp('maybe you are using a wrong method name...')
+                    disp('at the moment this function accept the following methods:')
+                    disp('strategy   random   correlation')
+                    disp('            ')
+                    disp('press any key to continue')
+                    pause
+                    matrix=ones(1,size(obj.TableRet,2)-2); %this may be deleted
             end
         end
         

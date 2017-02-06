@@ -60,6 +60,8 @@ mtxC=TestRegress.getMtxPredictors(TestRegress,10,'correlation');
 TestRegressSCR.SimpleConstrainedRegression(mtxC);
 TestRegressRR.RollingRegression;
 TestRegressCRR.ConstrainedRollingRegression(mtxR);
+names=TestRegress.TableRet.Properties.VariableNames(2:end-1);
+mtxS=TestRegress.getMtxPredictors(TestRegress,10,'strategy',names);
 
 
 
