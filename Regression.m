@@ -174,17 +174,17 @@ classdef Regression < handle
                 step=1;
                 mtxstep=1;
                 matrix=zeros(1,size(assetclass,2));
-                test=assetclass(2,step);
-                matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
+                test=assetclass(1,step);
+                matrix(mtxstep,:)=strcmp(test,assetclass(1,:));
                 step=step+1;
                 mtxstep=mtxstep+1;
                 while step<=size(assetclass,2)
-                    test=assetclass(2,step);
-                    if sum(strcmp(test,assetclass(2,1:step-1)))==0
-                        matrix(mtxstep,:)=strcmp(test,assetclass(2,:));
+                    test=assetclass(1,step);
+                    if sum(strcmp(test,assetclass(1,1:step-1)))==0
+                        matrix(mtxstep,:)=strcmp(test,assetclass(1,:));
                         mtxstep=mtxstep+1;
                     end
-                    while step<=size(assetclass,2) & strcmp(test,assetclass(2,step))
+                    while step<=size(assetclass,2) & strcmp(test,assetclass(1,step))
                         step=step+1;
                     end
               end
