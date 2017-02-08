@@ -133,10 +133,9 @@ classdef OptModelReg < handle
             % create a HFOptReg object (a subclass of HFRegression to be
             % used by the HedgeFund object to build the backtest track
             % record
-%             inputs.fund=obj.Fund;
-%             inputs.Indices=obj.Regressors;
-%             roll=obj.Rolling+obj.Rolling2;
-%             obj.Output=HFOptReg(inputs,roll,betas,obj.TableRet);
+            inputs=obj.Input;
+            inputs.rollingperiod=obj.Regressors;
+            obj.Output=HFOptReg(inputs,betas,obj.TableRet);
             
         end
         
