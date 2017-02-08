@@ -1,4 +1,4 @@
-classdef HFRollingReg < HFRegression
+classdef HFRollingReg < Regression
     % subclass of HFRegression to perform regressions on a rolling
     % timeframe 
     
@@ -32,7 +32,7 @@ classdef HFRollingReg < HFRegression
         % constructor
         function obj = HFRollingReg(params)
             
-            obj = obj@HFRegression(params);
+            obj = obj@Regression(params);
             obj.RollingPeriod = params.rollingperiod;
             
         end

@@ -1,4 +1,4 @@
-classdef HFSimpleConstrReg < HFRegression
+classdef HFSimpleConstrReg < Regression
     % subclass of HFRegression to perform simple regressions on a selected
     % subset of predictors
     
@@ -7,7 +7,7 @@ classdef HFSimpleConstrReg < HFRegression
         % constructor
         function obj = HFSimpleConstrReg(params)
             
-            obj = obj@HFRegression(params);
+            obj = obj@Regression(params);
             
         end
     
