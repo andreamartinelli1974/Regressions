@@ -13,6 +13,7 @@ classdef HFOptReg <Regression
         %constructor
         function obj=HFOptReg(inputs,betas,tableret)
             obj = obj@Regression(inputs);
+            obj.RollingPeriod=inputs.rollingperiod;
             obj.Betas=betas;
             obj.TableRet=tableret;
         end

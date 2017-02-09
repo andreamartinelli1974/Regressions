@@ -19,7 +19,6 @@ classdef OptModelReg < handle
         %       weeks if the series are weekly
         RegressorsStrategies; %celle array with the strategy associated to any regressor
         ModelMTX; % Logical Matrix for the different models
-        Rolling; % rolling window for the first regression
         Rolling2; % rolling window for the baynesian optimisation
         ModelWeights; % matrix with the optimal weights for any models
         TableRet; % the table of returns of the regressors and the fund (last column)
@@ -134,7 +133,7 @@ classdef OptModelReg < handle
             % used by the HedgeFund object to build the backtest track
             % record
             inputs=obj.Input;
-            inputs.rollingperiod=obj.Regressors;
+            inputs.rollingperiod=totalRollingPeriod;
             obj.Output=HFOptReg(inputs,betas,obj.TableRet);
             
         end
