@@ -51,13 +51,14 @@ prm.inputnames = finalOutput.(OutputNames{3}).riskFactorsTickers;
 prm.rollingperiod = 250;
 
 TestRegress = Regression(prm);
-% TestRegressSCR = Regression(prm);
+TestRegressSCR = Regression(prm);
 % TestRegressRR = Regression(prm);
 % TestRegressCRR = Regression(prm);
 % TestRegress.SimpleRegression;
 % mtxR=TestRegress.getMtxPredictors(TestRegress,10,'random');
-% mtxC=TestRegress.getMtxPredictors(TestRegress,10,'correlation');
-% TestRegressSCR.SimpleConstrainedRegression(mtxC);
+mtxC=TestRegress.getMtxPredictors(TestRegress,10,'correlation');
+TestRegressSCR.SimpleConstrainedRegression(mtxC);
+TestRegressSCR.ConstrainedRollingRegression(mtxC);
 % TestRegressRR.RollingRegression;
 % TestRegressCRR.ConstrainedRollingRegression(mtxR);
 names=TestRegress.TableRet.Properties.VariableNames(2:end-1);
@@ -65,7 +66,7 @@ mtxS=TestRegress.getMtxPredictors(TestRegress,10,'strategy',names);
 
 
 parameters=prm;
-parameters.indexstrategies=names;
+parameters.indexstrategies={'a','a','b','b','b','c'};
 parameters.checkingperiod=50;
 testOMR=OptModelReg(parameters)
 testOMR.OpRegression
