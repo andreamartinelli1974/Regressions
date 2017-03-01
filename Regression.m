@@ -151,7 +151,36 @@ classdef Regression < handle
     end
         
     methods (Static)
+        %% Function to create a forward estimation
+        % this function creates the estimated Y from the betas array and
+        % the matrix of correspondant Regressors
+        % INPUTS:
+        % Betas = horizontal array 1xK with alfa in the first column and then the
+        % K-1 betas
+        % RegressorsTimeSeries = array TxK with dates in the first colum
+        % and then the time series of any regressor (in the same order of the betas!) 
+        % OUTPUTS:
+        % output = Tx2 array with the dates in the first colum and the
+        % estimated Y in the second
         
+        function output=ForecastFromBetas(Betas,RegressorsTimeSeries)
+            % check matrix compatibility
+            numberOfRegressors = size(RegressorsTimeSeries,2);
+            numberOfBetas = size(Betas,2);
+            steps = size(RegressorsTimeSeries,1);
+            
+            if numberOfRegressors ~= numberOfBetas
+                E=MException('myComponent:dateError','numero di beta non compatibile col numero di regressori');
+                throw(ME)
+            end
+            
+            alfa(1:steps,1)=Betas(1);
+            beta=Betas(2:end)';
+            dates=RegressorsTimeSeries(:,1);
+            X=RegressorsTimeSeries(:,2:end);
+            mtxResult=alfa+X*beta;
+            output=[dates,mtxResult];
+        end
         %% this function Create a logical mtx to choose some regressors using different criteria
         function matrix=getMtxPredictors(obj,numberOfTry,method,varargin)
             
