@@ -40,7 +40,7 @@ classdef HFRollingReg < Regression
         function RollingReg(obj)
             
             if size(obj.TableRet,1)-obj.RollingPeriod<=0
-                    ME=MException('myComponent:dateError','la finestra di rolling é troppo lunga',obj.HFund.Name);
+                    ME=MException('myComponent:dateError','la finestra di rolling é troppo lunga');
                     throw(ME)
             end
             
@@ -83,7 +83,7 @@ classdef HFRollingReg < Regression
         function ConRollReg(obj,LogicalMTX)
             
             if size(obj.TableRet,1)-obj.RollingPeriod<=0
-                    ME=MException('myComponent:dateError','la finestra di rolling é troppo lunga',obj.HFund.Name);
+                    ME=MException('myComponent:dateError','la finestra di rolling é troppo lunga');
                     throw(ME)
             end
             %obj.TableRet(1,end)
@@ -94,6 +94,7 @@ classdef HFRollingReg < Regression
             % regressors minus the rolling window
             obj.Betas=zeros(steps,size(obj.TableRet,2));
             
+            stats = [];
             for j=1:steps %cycle on dates
               
                 testmin=100;
@@ -102,6 +103,7 @@ classdef HFRollingReg < Regression
                 rollingTable=obj.TableRet(j:obj.RollingPeriod+j-1,2:end);
                 
                 for i=1:size(obj.MtxOfRegressors,1) %cycle on logical matrix rows
+                    
                     
                     % choses the regressors according to the logical matrix
                     % (row by row)
@@ -116,7 +118,7 @@ classdef HFRollingReg < Regression
                     
                     % Checks for the goodness of the regresson compared to
                     % the previous best regression in terms of MSE
-                    if RT.MSE<testmin
+                    if (RT.MSE<testmin & RT.MSE>0)
                         obj.RegResult = temporary;
                         RT=obj.RegressionTest(temporary);
                         stats.OrdRS(j)=RT.OrdRSquared;
@@ -150,7 +152,7 @@ classdef HFRollingReg < Regression
         function MTXRollReg(obj,LogicalMTX)
             
             if size(obj.TableRet,1)-obj.RollingPeriod<=0
-                    ME=MException('myComponent:dateError','la2 finestra di rolling é troppo lunga',obj.HFund.Name);
+                    ME=MException('myComponent:dateError','la2 finestra di rolling é troppo lunga');
                     throw(ME)
             end
             

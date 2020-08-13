@@ -53,10 +53,10 @@ classdef OptModelReg < handle
             %create the logical matrix with the regressors to use in any
             %regression
             A=obj.RollReg.getMtxPredictors(obj,1,'strategy',obj.RegressorsStrategies);
-%             B=obj.RollReg.getMtxPredictors(obj,1,'correlation');
-%             lowcorrelregressors=find(B(end,:));
-%             obj.ModelMTX=A(:,lowcorrelregressors);
-            obj.ModelMTX=A
+            B=obj.RollReg.getMtxPredictors(obj,1,'correlation');
+            lowcorrelregressors=find(B(end,:));
+            obj.ModelMTX=A(:,lowcorrelregressors);
+%             obj.ModelMTX=A
             
             % with the MTXRollReg method of the HFRollingReg object create
             % the array of the betas with 3 dimensions:

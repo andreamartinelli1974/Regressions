@@ -23,7 +23,7 @@ classdef HFOptReg <Regression
             obj.Output = obj.TableRet;
         end
         function GetRolling(obj)
-            obj.Output=obj.Rolling;
+            obj.Output=obj.RollingPeriod;
         end
         
         function GetBetas(obj)
